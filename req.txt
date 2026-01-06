@@ -1,2 +1,0 @@
-Password = mQnkjHmbGcDx4nES
-Conn = postgresql://postgres.qcsyxuesdjsrdzwwguri:mQnkjHmbGcDx4nES@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
