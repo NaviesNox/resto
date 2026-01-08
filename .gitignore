@@ -8,6 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
-resto/.env
+.env
 #tambahan
 req.txt
