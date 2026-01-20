@@ -18,12 +18,6 @@ class UserRole(enum.Enum):
     kasir = "kasir"
 
 
-class KategoriMenu(enum.Enum):
-    makanan = "makanan"
-    minuman = "minuman"
-    makanan_ringan = "makanan_ringan"
-
-
 class StatusPesanan(enum.Enum):
     dipesan = "dipesan"
     diproses = "diproses"
@@ -83,6 +77,13 @@ class Karyawan(Base):
 
     user = relationship("User", backref="karyawan", uselist=False)    
 
+class KategoriMenu(Base):
+    __tablename__ = "kategori_menu"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nama_kategori = Column(String, unique=True, nullable=False)
+
+    menu = relationship("Menu", backref="kategori_menu")
 
 class Menu(Base):
     __tablename__ = "menu"
@@ -91,11 +92,12 @@ class Menu(Base):
     nama_menu = Column(String, unique=True, nullable=False)
     harga = Column(Float, nullable=False)
     stok = Column(Integer, nullable=False)
-    kategori = Column(Enum(KategoriMenu), nullable=False)
+    kategori = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)
     foto = Column(String, nullable=True)
     deskripsi = Column(Text, nullable=True)
 
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
+    kategori_menu = relationship("KategoriMenu", back_populates="menu")
 
 
 class updateStokHarian(Base):
