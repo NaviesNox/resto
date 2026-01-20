@@ -11,3 +11,4 @@ wheels/
 .env
 #tambahan
 req.txt
+alembic.ini
