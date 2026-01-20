@@ -14,6 +14,8 @@ class StatusMeja(enum.Enum):
 class UserRole(enum.Enum):
     admin = "admin"
     pramusaji = "pramusaji"
+    manager = "manager"
+    kasir = "kasir"
 
 
 class KategoriMenu(enum.Enum):
@@ -39,6 +41,10 @@ class MetodePembayaran(enum.Enum):
     cash = "cash"
     qris = "qris"
 
+class statusUser(enum.Enum):
+    active = "active"
+    inactive = "inactive"
+
 
 
 class Meja(Base):
@@ -60,10 +66,22 @@ class User(Base):
     nama = Column(String, nullable=False)
     no_telp = Column(String, nullable=False)
     password = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=True)
     role = Column(Enum(UserRole), default=UserRole.pramusaji, nullable=False)
+    status = Column(Enum(statusUser), default=statusUser.active, nullable=True)
+    id_karyawan = Column(Integer, ForeignKey("karyawan.id"), nullable=True)
+
 
     pesanan = relationship("Pesanan", back_populates="user")
 
+class Karyawan(Base):
+    __tablename__ = "karyawan"
+    id = Column(Integer, primary_key=True, index=True)
+    nama_karyawan = Column(String, nullable=False)
+    no_hp = Column(String, nullable=False)
+    alamat = Column(String, nullable=False)
+
+    user = relationship("User", backref="karyawan", uselist=False)    
 
 
 class Menu(Base):
@@ -74,14 +92,27 @@ class Menu(Base):
     harga = Column(Float, nullable=False)
     stok = Column(Integer, nullable=False)
     kategori = Column(Enum(KategoriMenu), nullable=False)
+    foto = Column(String, nullable=True)
+    deskripsi = Column(Text, nullable=True)
 
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
+
+
+class updateStokHarian(Base):
+    __tablename__ = "update_stok_harian"
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_menu = Column(Integer, ForeignKey("menu.id"), nullable=False)
+    jumlah_porsi = Column(Integer, nullable=False)
+    tanggal_update = Column(DateTime, default=datetime.now, nullable=False)
+
+    menu = relationship("Menu", backref="update_stok_harian")    
 
 class Transaksi(Base):
     __tablename__ = "transaksi"
 
     id = Column(Integer, primary_key=True, index=True)
-    waktu = Column(DateTime, default=datetime.utcnow, nullable=False)
+    waktu = Column(DateTime, default=datetime.now, nullable=False)
 
     pesanan = relationship("Pesanan", back_populates="transaksi")
     pembayaran = relationship("Pembayaran", back_populates="transaksi", uselist=False)
@@ -99,7 +130,7 @@ class Pesanan(Base):
     tipe_pesanan = Column(Enum(TipePesanan), nullable=False)
     kode_pesanan = Column(String, unique=True, nullable=False)
 
-    tanggal = Column(DateTime, default=datetime.utcnow, nullable=False)
+    tanggal = Column(DateTime, default=datetime.now, nullable=False)
     status = Column(Enum(StatusPesanan), default=StatusPesanan.dipesan, nullable=False)
     catatan = Column(Text)
 
@@ -125,9 +156,14 @@ class DetailPesanan(Base):
 
 class Pembayaran(Base):
     __tablename__ = "pembayaran"
+
     id = Column(Integer, primary_key=True)
-    id_pesanan = Column(Integer, ForeignKey("pesanan.id"), unique=True)
+    id_transaksi = Column(Integer, ForeignKey("transaksi.id"), unique=True, nullable=False)
+
     metode = Column(Enum(MetodePembayaran), nullable=False)
     total = Column(Float, nullable=False)
-    waktu_bayar = Column(DateTime, default=datetime.now)
+    waktu_bayar = Column(DateTime, default=datetime.now , nullable=False)
     status = Column(String, default="lunas")
+
+    transaksi = relationship("Transaksi", back_populates="pembayaran")
+
