@@ -57,16 +57,14 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable=False)
-    nama = Column(String, nullable=False)
-    no_telp = Column(String, nullable=False)
     password = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=True)
     role = Column(Enum(UserRole), default=UserRole.pramusaji, nullable=False)
     status = Column(Enum(statusUser), default=statusUser.active, nullable=True)
     id_karyawan = Column(Integer, ForeignKey("karyawan.id"), nullable=True)
 
-
     pesanan = relationship("Pesanan", back_populates="user")
+    karyawan = relationship("Karyawan", back_populates="user", uselist=False)  # Tambahkan ini untuk akses ke Karyawan
 
 class Karyawan(Base):
     __tablename__ = "karyawan"
@@ -75,7 +73,7 @@ class Karyawan(Base):
     no_hp = Column(String, nullable=False)
     alamat = Column(String, nullable=False)
 
-    user = relationship("User", backref="karyawan", uselist=False)    
+    user = relationship("User", back_populates="karyawan", uselist=False)  # Ubah backref ke back_populates
 
 class KategoriMenu(Base):
     __tablename__ = "kategori_menu"
@@ -83,7 +81,7 @@ class KategoriMenu(Base):
     id = Column(Integer, primary_key=True, index=True)
     nama_kategori = Column(String, unique=True, nullable=False)
 
-    menu = relationship("Menu", backref="kategori_menu")
+    menu = relationship("Menu", back_populates="kategori")  # Ubah backref ke back_populates dan sesuaikan nama
 
 class Menu(Base):
     __tablename__ = "menu"
@@ -92,13 +90,12 @@ class Menu(Base):
     nama_menu = Column(String, unique=True, nullable=False)
     harga = Column(Float, nullable=False)
     stok = Column(Integer, nullable=False)
-    kategori = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)
+    id_kategori_menu = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)  # Tetap sebagai Column
     foto = Column(String, nullable=True)
     deskripsi = Column(Text, nullable=True)
-
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
-    kategori_menu = relationship("KategoriMenu", back_populates="menu")
-
+    kategori = relationship("KategoriMenu", back_populates="menu")  # Rename dari kategori_menu untuk hindari konflik
+    update_stok_harian = relationship("updateStokHarian", back_populates="menu")  # Tambahkan back_populates
 
 class updateStokHarian(Base):
     __tablename__ = "update_stok_harian"
@@ -108,7 +105,7 @@ class updateStokHarian(Base):
     jumlah_porsi = Column(Integer, nullable=False)
     tanggal_update = Column(DateTime, default=datetime.now, nullable=False)
 
-    menu = relationship("Menu", backref="update_stok_harian")    
+    menu = relationship("Menu", back_populates="update_stok_harian")  # Tambahkan back_populates
 
 class Transaksi(Base):
     __tablename__ = "transaksi"
@@ -116,7 +113,7 @@ class Transaksi(Base):
     id = Column(Integer, primary_key=True, index=True)
     waktu = Column(DateTime, default=datetime.now, nullable=False)
 
-    pesanan = relationship("Pesanan", back_populates="transaksi")
+    pesanan = relationship("Pesanan", back_populates="transaksi", uselist=False)  # Tambahkan uselist=False jika one-to-one
     pembayaran = relationship("Pembayaran", back_populates="transaksi", uselist=False)
 
 
