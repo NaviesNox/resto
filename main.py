@@ -6,8 +6,11 @@ from app.routes.menu import menu_routes
 from app.routes.user import user_router
 from app.routes.meja import meja_routes
 from app.routes.kategori_menu import kategori_menu_routes
-
-
+from app.routes.transaksi import transaksi_routes
+from app.routes.updateStokHarian import updateStokHarian_routes
+from typing import List
+from app.routes.karyawan import karyawan_routes
+from app.routes.pesanan import pesanan_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -17,6 +20,10 @@ app.include_router(user_router.router)
 app.include_router(meja_routes.router)
 app.include_router(menu_routes.router)
 app.include_router(kategori_menu_routes.router)
+app.include_router(transaksi_routes.router)
+app.include_router(updateStokHarian_routes.router)
+app.include_router(karyawan_routes.router)
+app.include_router(pesanan_routes.router)
 
 """Allow CORS for all origins"""
 

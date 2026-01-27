@@ -27,3 +27,8 @@ class UpdateStokHarianResponse(UpdateStokHarianBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class UpdateStokHarianInDB(UpdateStokHarianResponse):
+    """Model representing an updateStokHarian stored in the database."""
+    pass
+
