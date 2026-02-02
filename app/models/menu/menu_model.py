@@ -5,28 +5,21 @@ from typing import Optional
 
 class MenuBase(BaseModel):
     """Base model representing a menu item in the application."""
-    nama_menu: str = Field(..., unique=True, nullable=False)
-    kategori: int = Field(..., nullable=False)
-    harga: float = Field(..., description="Price of the menu item", nullable=False)
-    stok: int = Field(..., description="Stock of the menu item", nullable=False)
+    nama_menu: str = Field(...)
+    kategori: int = Field(...)
+    harga: float = Field(..., description="Price of the menu item")
+    stok: int = Field(..., description="Stock of the menu item")
 
 class MenuCreate(MenuBase):
     """Model for creating a new menu item."""
     pass
 
-class MenuCreateWithFile(BaseModel):
-    """Model for creating a menu item with file upload."""
-    nama_menu: str = Field(..., description="Menu name")
-    kategori: int = Field(..., description="Category ID")
-    harga: float = Field(..., description="Price of the menu item")
-    stok: int = Field(..., description="Stock of the menu item")
-
 class MenuUpdate(BaseModel):
     """Model for updating an existing menu item."""
-    nama_menu: Optional[str] = Field(None, unique=True, nullable=False)
-    kategori: Optional[int] = Field(None, nullable=False)
-    harga: Optional[float] = Field(None, description="Price of the menu item", nullable=False)
-    stok: Optional[int] = Field(None, description="Stock of the menu item", nullable=False)
+    nama_menu: Optional[str] = None
+    kategori: Optional[int] = None
+    harga: Optional[float] = None
+    stok: Optional[int] = None
 
 class MenuDelete(BaseModel):
     """Model for deleting a menu item."""
@@ -36,6 +29,4 @@ class MenuResponse(MenuBase):
     """Base model for menu item in database with ID."""
     id: int = Field(..., description="Unique identifier for the menu item")
 
-    model_config = ConfigDict({
-        "from_attributes": True
-    })
+    model_config = ConfigDict(from_attributes=True)

@@ -91,7 +91,6 @@ class Menu(Base):
     harga = Column(Float, nullable=False)
     stok = Column(Integer, nullable=False)
     id_kategori_menu = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)  # Tetap sebagai Column
-    foto = Column(String, nullable=True)
     deskripsi = Column(Text, nullable=True)
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
     kategori = relationship("KategoriMenu", back_populates="menu")  # Rename dari kategori_menu untuk hindari konflik

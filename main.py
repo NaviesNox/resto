@@ -1,7 +1,6 @@
 """Main API"""
 
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from app.routes.auth import auth_router
 from app.routes.menu import menu_routes
 from app.routes.user import user_router
@@ -13,8 +12,6 @@ from typing import List
 from app.routes.karyawan import karyawan_routes
 from app.routes.pesanan import pesanan_routes
 from fastapi.middleware.cors import CORSMiddleware
-import os
-from pathlib import Path
 
 
 app = FastAPI(title="Resto API", version="1.0.0")
@@ -27,13 +24,6 @@ app.include_router(transaksi_routes.router)
 app.include_router(updateStokHarian_routes.router)
 app.include_router(karyawan_routes.router)
 app.include_router(pesanan_routes.router)
-
-# Create uploads directory if it doesn't exist
-uploads_dir = Path("uploads")
-uploads_dir.mkdir(exist_ok=True)
-
-# Mount static files
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 """Allow CORS for all origins"""
 
