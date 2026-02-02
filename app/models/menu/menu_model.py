@@ -14,6 +14,13 @@ class MenuCreate(MenuBase):
     """Model for creating a new menu item."""
     pass
 
+class MenuCreateWithFile(BaseModel):
+    """Model for creating a menu item with file upload."""
+    nama_menu: str = Field(..., description="Menu name")
+    kategori: int = Field(..., description="Category ID")
+    harga: float = Field(..., description="Price of the menu item")
+    stok: int = Field(..., description="Stock of the menu item")
+
 class MenuUpdate(BaseModel):
     """Model for updating an existing menu item."""
     nama_menu: Optional[str] = Field(None, unique=True, nullable=False)

@@ -1,10 +1,11 @@
 """Menu Routes"""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.models.menu import menu_service
-from app.models.menu.menu_model import MenuCreate, MenuUpdate, MenuResponse
+from app.models.menu.menu_model import MenuCreate, MenuUpdate, MenuResponse, MenuCreateWithFile
+from typing import Optional
 
 router = APIRouter(prefix="/menus", tags=["Menus"])
 """Ambil semua menu yang ada"""
@@ -27,6 +28,31 @@ def get_menu(id: int, db:Session = Depends(get_db)):
 def create_menu(menu: MenuCreate, db: Session = Depends(get_db)):
     """Menambahkan menu baru"""
     return menu_service.create_menu(db, menu)
+
+"""Tambah menu dengan upload foto"""
+@router.post("/upload", response_model=MenuResponse, status_code=status.HTTP_201_CREATED)
+def create_menu_with_upload(
+    nama_menu: str = Form(...),
+    kategori: int = Form(...),
+    harga: float = Form(...),
+    stok: int = Form(...),
+    foto: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db)
+):
+    """Menambahkan menu baru dengan upload foto"""
+    try:
+        menu_data = MenuCreateWithFile(
+            nama_menu=nama_menu,
+            kategori=kategori,
+            harga=harga,
+            stok=stok
+        )
+        return menu_service.create_menu_with_file(db, menu_data, foto)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 """Update menu"""
 @router.patch("/{id}", response_model=MenuResponse) 
