@@ -81,7 +81,7 @@ class KategoriMenu(Base):
     id = Column(Integer, primary_key=True, index=True)
     nama_kategori = Column(String, unique=True, nullable=False)
 
-    menu = relationship("Menu", back_populates="kategori")  # Ubah backref ke back_populates dan sesuaikan nama
+    menu = relationship("Menu", back_populates="kategori_obj")  # Ubah backref ke back_populates dan sesuaikan nama
 
 class Menu(Base):
     __tablename__ = "menu"
@@ -93,8 +93,13 @@ class Menu(Base):
     id_kategori_menu = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)  # Tetap sebagai Column
     deskripsi = Column(Text, nullable=True)
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
-    kategori = relationship("KategoriMenu", back_populates="menu")  # Rename dari kategori_menu untuk hindari konflik
+    kategori_obj = relationship("KategoriMenu", back_populates="menu")  # Rename dari kategori_menu untuk hindari konflik
     update_stok_harian = relationship("updateStokHarian", back_populates="menu")  # Tambahkan back_populates
+
+    @property
+    def kategori(self):
+        """Expose the category id as `kategori` for serializers/response models."""
+        return self.id_kategori_menu
 
 class updateStokHarian(Base):
     __tablename__ = "update_stok_harian"
