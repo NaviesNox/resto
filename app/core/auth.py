@@ -23,8 +23,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 class TokenData(BaseModel):
-    user_id:int
-    role: Optional[UserRole] = None
+    user_id: int
+    role: Optional[str] = None
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta]= None):
     to_encode = data.copy()
