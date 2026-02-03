@@ -17,7 +17,9 @@ def create_menu(db: Session, menu: MenuCreate) -> Menu:
     Returns:
         Menu: The created menu instance.
     """
-    new_menu = Menu(**menu.model_dump())
+    menu_data = menu.model_dump()
+    menu_data['id_kategori_menu'] = menu_data.pop('kategori')
+    new_menu = Menu(**menu_data)
     db.add(new_menu)
     db.commit()
     db.refresh(new_menu)
@@ -67,6 +69,8 @@ def update_menu(db: Session, menu_id: int, menu_update: MenuUpdate) -> Optional[
     if not menu:
         return None
     update_data = menu_update.model_dump(exclude_unset=True)
+    if 'kategori' in update_data:
+        update_data['id_kategori_menu'] = update_data.pop('kategori')
     for key, value in update_data.items():
         setattr(menu, key, value)
     db.commit()

@@ -8,6 +8,7 @@ class MenuBase(BaseModel):
     nama_menu: str = Field(...)
     kategori: int = Field(...)
     harga: float = Field(..., description="Price of the menu item")
+    deskripsi: Optional[str] = Field(None, description="Description of the menu item")
     stok: int = Field(..., description="Stock of the menu item")
 
 class MenuCreate(MenuBase):
@@ -19,6 +20,7 @@ class MenuUpdate(BaseModel):
     nama_menu: Optional[str] = None
     kategori: Optional[int] = None
     harga: Optional[float] = None
+    deskripsi: Optional[str] = None
     stok: Optional[int] = None
 
 class MenuDelete(BaseModel):

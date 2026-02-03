@@ -66,6 +66,16 @@ class User(Base):
     pesanan = relationship("Pesanan", back_populates="user")
     karyawan = relationship("Karyawan", back_populates="user", uselist=False)  # Tambahkan ini untuk akses ke Karyawan
 
+    @property
+    def nama(self):
+        """Expose employee name as `nama` for serializers/response models."""
+        return self.karyawan.nama_karyawan if self.karyawan else None
+
+    @property
+    def no_telp(self):
+        """Expose employee phone as `no_telp` for serializers/response models."""
+        return self.karyawan.no_hp if self.karyawan else None
+
 class Karyawan(Base):
     __tablename__ = "karyawan"
     id = Column(Integer, primary_key=True, index=True)
