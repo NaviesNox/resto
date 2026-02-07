@@ -8,6 +8,7 @@ from app.routes.meja import meja_routes
 from app.routes.kategori_menu import kategori_menu_routes
 from app.routes.transaksi import transaksi_routes
 from app.routes.updateStokHarian import updateStokHarian_routes
+from app.routes.pesanan.detail_pesanan import detail_pesanan_routes
 from typing import List
 from app.routes.karyawan import karyawan_routes
 from app.routes.pesanan import pesanan_routes
@@ -24,6 +25,7 @@ app.include_router(transaksi_routes.router)
 app.include_router(updateStokHarian_routes.router)
 app.include_router(karyawan_routes.router)
 app.include_router(pesanan_routes.router)
+app.include_router(detail_pesanan_routes.router)
 
 """Allow CORS for all origins"""
 
