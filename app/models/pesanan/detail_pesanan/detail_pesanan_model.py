@@ -7,7 +7,8 @@ class DetailPesananBase(BaseModel):
     """Base model representing a detail_pesanan (order details) in the application."""
     id_pesanan: int = Field(..., description="ID of the associated pesanan (order)", nullable=False)
     id_menu: int = Field(..., description="ID of the associated menu item", nullable=False)
-    jumlah: int = Field(..., description="Quantity of the menu item ordered", nullable=False)
+    qty: int = Field(..., description="Quantity of the menu item ordered", nullable=False)
+    harga_satuan: float = Field(..., description="Unit price of the menu item", nullable=False)
     subtotal: float = Field(..., description="Subtotal price for the menu item ordered", nullable=False)
 
 class DetailPesananCreate(DetailPesananBase):
@@ -15,9 +16,11 @@ class DetailPesananCreate(DetailPesananBase):
     pass
 
 class DetailPesananUpdate(BaseModel):
+    """Model for updating an existing detail_pesanan (order details)."""
     id_pesanan: Optional[int] = Field(None, description="ID of the associated pesanan (order)", nullable=False)
     id_menu: Optional[int] = Field(None, description="ID of the associated menu item", nullable=False)
-    jumlah: Optional[int] = Field(None, description="Quantity of the menu item ordered", nullable=False)
+    qty: Optional[int] = Field(None, description="Quantity of the menu item ordered", nullable=False)
+    harga_satuan: Optional[float] = Field(None, description="Unit price of the menu item", nullable=False)
     subtotal: Optional[float] = Field(None, description="Subtotal price for the menu item ordered", nullable=False)
 
 class DetailPesananDelete(BaseModel):
