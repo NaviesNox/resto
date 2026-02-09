@@ -1,52 +1,60 @@
-"""Model for the pesanan (order) in the application."""
-
 from pydantic import BaseModel, Field, ConfigDict
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
+
+# --- ENUMS (Harus Sama dengan orm_models.py) ---
 
 class TipePesanan(str, Enum):
-    dine_in = "dine_in"
-    takeaway = "takeaway"
+    dine_in = "dine-in"
+    take_away = "take-away"
 
 class StatusPesanan(str, Enum):
-    dipesan = "dipesan"
+    baru = "baru"
     diproses = "diproses"
+    siap = "siap"
     selesai = "selesai"
-    dibayar = "dibayar"
-    dibatalkan = "dibatalkan"
+    batal = "batal"
+
+# --- SCHEMAS ---
+
+class DetailPesananSchema(BaseModel):
+    id: int
+    id_menu: int
+    nama_menu: Optional[str] = None # Untuk kebutuhan FE menampilkan nama
+    qty: int
+    harga_satuan: float
+    subtotal: float
+
+    model_config = ConfigDict(from_attributes=True)
 
 class PesananBase(BaseModel):
-    id_transaksi: int = Field(..., description="ID of the associated transaksi (transaction)", nullable=False)
-    id_user: int = Field(..., description="ID of the user who placed the order", nullable=False)
-    id_meja: int = Field(..., description="ID of the table associated with the order", nullable=False)
-    tipe_pesanan: TipePesanan = Field(..., description="Type of the order (dine_in or takeaway)", nullable=False)
-    kode_pesanan: str = Field(..., description="Unique code for the pesanan (order)", nullable=False)
-    tanggal: str = Field(..., description="Date when the order was placed", nullable=False)
-    status: StatusPesanan = Field(..., description="Status of the order", nullable=False)
+    id_transaksi: int
+    id_user: int
+    id_meja: Optional[int] = None
+    tipe_pesanan: TipePesanan
+    kode_pesanan: str
+    tanggal: datetime
+    status: StatusPesanan = StatusPesanan.baru
+    catatan: Optional[str] = None
 
-class PesananCreate(PesananBase):
-    """Model for creating a new pesanan (order)."""
-    pass
+class PesananCreate(BaseModel):
+    id_meja: Optional[int] = None
+    tipe_pesanan: TipePesanan
+    catatan: Optional[str] = None
+    # detail_pesanan biasanya dikirim saat create
+    items: List[dict] 
 
 class PesananUpdate(BaseModel):
-    """Model for updating an existing pesanan (order)."""
-    id_transaksi: Optional[int] = Field(None, description="ID of the associated transaksi (transaction)", nullable=False)
-    id_user: Optional[int] = Field(None, description="ID of the user who placed the order", nullable=False)
-    id_meja: Optional[int] = Field(None, description="ID of the table associated with the order", nullable=False)
-    tipe_pesanan: Optional[TipePesanan] = Field(None, description="Type of the order (dine_in or takeaway)", nullable=False)
-    kode_pesanan: Optional[str] = Field(None, description="Unique code for the pesanan (order)", nullable=False)
-    tanggal: Optional[str] = Field(None, description="Date when the order was placed", nullable=False)
-    status: Optional[StatusPesanan] = Field(None, description="Status of the order", nullable=False)    
-    
-
-class PesananDelete(BaseModel):
-    """Model for deleting a pesanan (order)."""
-    id: int = Field(..., description="Unique identifier for the pesanan (order) to be deleted")
+    status: Optional[StatusPesanan] = None
+    id_meja: Optional[int] = None
+    catatan: Optional[str] = None
 
 class PesananResponse(PesananBase):
-    """Base model for pesanan (order) in database with ID."""
-    id: int = Field(..., description="Unique identifier for the pesanan (order)")
+    id: int
+    # Tambahan agar FE bisa langsung menampilkan teks tanpa mapping ID lagi
+    nama_user: Optional[str] = None 
+    kode_meja: Optional[str] = None
+    detail_pesanan: List[DetailPesananSchema] = []
 
-    model_config = ConfigDict({
-        "from_attributes": True
-    })
+    model_config = ConfigDict(from_attributes=True)
