@@ -3,10 +3,10 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.updateStokHarian.updateStokHarian_model import UpdateStokHarianCreate, UpdateStokHarianUpdate
-from orm_models import updateStokHarian
+from orm_models import UpdateStokHarian
 
 
-def create_update_stok_harian(db: Session, update_stok: UpdateStokHarianCreate) -> updateStokHarian:
+def create_update_stok_harian(db: Session, update_stok: UpdateStokHarianCreate) -> UpdateStokHarian:
     """
     Create a new updateStokHarian (daily stock update) record in the database.
 
@@ -15,16 +15,16 @@ def create_update_stok_harian(db: Session, update_stok: UpdateStokHarianCreate) 
         update_stok (UpdateStokHarianCreate): The updateStokHarian data to create.
 
     Returns:
-        updateStokHarian: The created updateStokHarian instance.
+        UpdateStokHarian: The created updateStokHarian instance.
     """
-    new_update_stok = updateStokHarian(**update_stok.model_dump())
+    new_update_stok = UpdateStokHarian(**update_stok.model_dump())
     db.add(new_update_stok)
     db.commit()
     db.refresh(new_update_stok)
     return new_update_stok
 
 
-def get_all_update_stok_harian(db: Session) -> List[updateStokHarian]:
+def get_all_update_stok_harian(db: Session) -> List[UpdateStokHarian]:
     """
     Retrieve all updateStokHarian (daily stock update) records from the database.
 
@@ -32,12 +32,12 @@ def get_all_update_stok_harian(db: Session) -> List[updateStokHarian]:
         db (Session): The database session.
 
     Returns:
-        List[updateStokHarian]: A list of all updateStokHarian instances.
+        List[UpdateStokHarian]: A list of all updateStokHarian instances.
     """
-    return db.query(updateStokHarian).all()
+    return db.query(UpdateStokHarian).all()
 
 
-def get_update_stok_harian_by_id(db: Session, update_stok_id: int) -> Optional[updateStokHarian]:
+def get_update_stok_harian_by_id(db: Session, update_stok_id: int) -> Optional[UpdateStokHarian]:
     """
     Retrieve a updateStokHarian (daily stock update) record by its ID.
 
@@ -46,12 +46,12 @@ def get_update_stok_harian_by_id(db: Session, update_stok_id: int) -> Optional[u
         update_stok_id (int): The ID of the updateStokHarian to retrieve.
 
     Returns:
-        Optional[updateStokHarian]: The updateStokHarian instance if found, None otherwise.
+        Optional[UpdateStokHarian]: The updateStokHarian instance if found, None otherwise.
     """
-    return db.query(updateStokHarian).filter(updateStokHarian.id == update_stok_id).first()
+    return db.query(UpdateStokHarian).filter(UpdateStokHarian.id == update_stok_id).first()
 
 
-def update_update_stok_harian(db: Session, update_stok_id: int, update_stok_update: UpdateStokHarianUpdate) -> Optional[updateStokHarian]:
+def update_update_stok_harian(db: Session, update_stok_id: int, update_stok_update: UpdateStokHarianUpdate) -> Optional[UpdateStokHarian]:
     """
     Update an existing updateStokHarian (daily stock update) record.
 
@@ -61,7 +61,7 @@ def update_update_stok_harian(db: Session, update_stok_id: int, update_stok_upda
         update_stok_update (UpdateStokHarianUpdate): The updated updateStokHarian data.
 
     Returns:
-        Optional[updateStokHarian]: The updated updateStokHarian instance if found, None otherwise.
+        Optional[UpdateStokHarian]: The updated updateStokHarian instance if found, None otherwise.
     """
     update_stok = get_update_stok_harian_by_id(db, update_stok_id)
     if not update_stok:
@@ -74,9 +74,9 @@ def update_update_stok_harian(db: Session, update_stok_id: int, update_stok_upda
     return update_stok
 
 
-def delete_update_stok_harian(db: Session, update_stok_id: int) -> Optional[updateStokHarian]:
+def delete_update_stok_harian(db: Session, update_stok_id: int) -> Optional[UpdateStokHarian]:
     """
-    Delete a updateStokHarian (daily stock update) record from the database.
+    Delete a updateStokHarian (daily stock update) record from the database. 
 
     Args:
         db (Session): The database session.
