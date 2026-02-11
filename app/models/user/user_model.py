@@ -53,10 +53,10 @@ class UserDelete(BaseModel):
     id: int = Field(..., description="Unique identifier for the user to be deleted")
 
 class UserResponse(BaseModel):
-    """Response model for user data."""
-
+    """Model for user response."""
     id: int = Field(..., description="Unique identifier for the user")
-    username: str = Field(..., nullable=False)
+    username: str = Field(..., unique=True, nullable=False)
+    email: EmailStr = Field(..., unique=True, nullable=True)
     role: UserRole = Field(..., nullable=False)
     email: EmailStr = Field(..., nullable=False)
     status: statusUser = Field(default=statusUser.active, nullable=False)
@@ -65,3 +65,10 @@ class UserResponse(BaseModel):
     model_config = ConfigDict({
         "from_attributes": True
     })
+
+    status: statusUser = Field(..., nullable=True)
+    id_karyawan: int = Field(..., description="ID of the associated employee", nullable=False)
+
+    model_config = ConfigDict(from_attributes=True)
+    
+

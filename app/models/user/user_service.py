@@ -155,7 +155,7 @@ def delete_user(db: Session, user_id: int) -> Optional[User]:
     """
     user = get_user_by_id(db, user_id)
     if not user:
-        return None
+        return ("User not found")
     db.delete(user)
     db.commit()
     return user
