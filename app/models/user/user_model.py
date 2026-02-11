@@ -54,14 +54,26 @@ class UserDelete(BaseModel):
 
 class UserResponse(BaseModel):
     """Response model for user data."""
+<<<<<<< HEAD
+=======
+
+>>>>>>> ad6199ee8eb8dff41a96daf676560b944cf9cd71
     id: int = Field(..., description="Unique identifier for the user")
     username: str = Field(..., nullable=False)
     role: UserRole = Field(..., nullable=False)
     email: EmailStr = Field(..., nullable=False)
     status: statusUser = Field(default=statusUser.active, nullable=False)
+<<<<<<< HEAD
     id_karyawan: int = Field(..., nullable=False)
 
     model_config = ConfigDict({
         "from_attributes": True
     })
 
+=======
+    id_karyawan: Optional[int] = Field(None, description="ID of the associated employee", nullable=True)
+
+    model_config = ConfigDict({
+        "from_attributes": True
+    })
+>>>>>>> ad6199ee8eb8dff41a96daf676560b944cf9cd71
