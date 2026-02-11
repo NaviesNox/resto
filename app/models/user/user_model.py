@@ -1,7 +1,6 @@
 """User model for the application."""
 
-import email
-from pydantic import BaseModel,  Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict, EmailStr, computed_field
 from typing import Optional
 import enum
 
@@ -21,12 +20,10 @@ class Userbase(BaseModel):
 
     
     username: str = Field(..., unique=True, nullable=False)
-    nama: str = Field(..., description="Full name of the user", nullable=False)
-    no_telp: str = Field(..., description="Phone number of the user", nullable=False)
     role: UserRole = Field(..., nullable=False)
     email: EmailStr = Field(..., unique=True, nullable=False)
     status: statusUser = Field(default=statusUser.active, nullable=False)
-    id_karyawan: int = Field(..., description="ID of the associated employee", nullable=True)
+    id_karyawan: int = Field(..., description="ID of the associated employee", nullable=False)
 
 class UserCreate(Userbase):
     """Model for creating a new user."""    
@@ -36,21 +33,17 @@ class UserCreate(Userbase):
 class UserRegis(BaseModel):
     """Model for user registration."""
     username: str = Field(..., unique=True, nullable=False)
-    nama: str = Field(..., description="Full name of the user", nullable=False)
-    no_telp: str = Field(..., description="Phone number of the user", nullable=False)
     password: str = Field(..., nullable=False)
     email: EmailStr = Field(..., unique=True, nullable=True)
     role: UserRole = Field(default=UserRole.pramusaji, nullable=False)
     status: statusUser = Field(default=statusUser.active, nullable=True)
-    id_karyawan: Optional[int] = Field(None, description="ID of the associated employee", nullable=True)
+    id_karyawan: int = Field(..., description="ID of the associated employee", nullable=False)
 
     
 
 class UserUpdate(BaseModel):
     """Model for updating an existing user."""
     username: Optional[str] = Field(None, unique=True, nullable=False)
-    nama: Optional[str] = Field(None, description="Full name of the user", nullable=False)
-    no_telp: Optional[str] = Field(None, description="Phone number of the user", nullable=False)
     password: Optional[str] = Field(None, nullable=False)
     role: Optional[UserRole] = Field(None, nullable=False)
 
@@ -59,12 +52,16 @@ class UserDelete(BaseModel):
     """Model for deleting a user."""
     id: int = Field(..., description="Unique identifier for the user to be deleted")
 
-class UserResponse(Userbase):
-    """Base model for user in database with ID."""
+class UserResponse(BaseModel):
+    """Response model for user data."""
     id: int = Field(..., description="Unique identifier for the user")
-
-
+    username: str = Field(..., nullable=False)
+    role: UserRole = Field(..., nullable=False)
+    email: EmailStr = Field(..., nullable=False)
+    status: statusUser = Field(default=statusUser.active, nullable=False)
+    id_karyawan: int = Field(..., nullable=False)
 
     model_config = ConfigDict({
         "from_attributes": True
     })
+
