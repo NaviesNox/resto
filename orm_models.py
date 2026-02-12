@@ -85,6 +85,10 @@ class Menu(Base):
     id_kategori_menu = Column(Integer, ForeignKey("kategori_menu.id"), nullable=False)
     deskripsi = Column(Text, nullable=True)
     
+    @property
+    def kategori(self):
+        return self.id_kategori_menu
+
     kategori_obj = relationship("KategoriMenu", back_populates="menu")
     detail_pesanan = relationship("DetailPesanan", back_populates="menu")
     update_stok_harian = relationship("UpdateStokHarian", back_populates="menu")

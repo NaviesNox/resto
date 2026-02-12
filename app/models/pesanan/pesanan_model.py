@@ -58,3 +58,14 @@ class PesananResponse(PesananBase):
     detail_pesanan: List[DetailPesananSchema] = []
 
     model_config = ConfigDict(from_attributes=True)
+
+class ItemPesananRequest(BaseModel):
+    id_menu: int
+    qty: int
+    harga_satuan: float
+
+class CreatePesananRequest(BaseModel):
+    id_meja: Optional[int] = None
+    tipe_pesanan: str  # "dine-in" atau "take-away"
+    catatan: Optional[str] = ""
+    items: List[ItemPesananRequest]
